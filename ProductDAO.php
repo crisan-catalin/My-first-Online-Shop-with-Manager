@@ -52,7 +52,41 @@ class ProductDAO
             "image" => $row[3]);
     }
 
-    //TODO: getProducts for pagination
+    public static function getProducts($resultsPerPage, $pageNo)
+    {
+        $offset = (intval($pageNo) - 1) * $resultsPerPage;
+        $query = "SELECT id, name, price, stock, image FROM product LIMIT $resultsPerPage OFFSET $offset";
+        $result = mysql_query($query);
+
+        if ($result == false) {
+            return array("response" => "failed");
+        }
+
+        $productArray = array("response" => "success");
+        while ($row = mysql_fetch_array($result)) {
+            array_push($productArray, array("id" => $row[0],
+                "name" => $row[1],
+                "price" => $row[2],
+                "stock" => $row[3],
+                "image" => $row[4]));
+        }
+
+        return $productArray;
+    }
+
+    public static function getPageNumbersUsing($resultPerPage)
+    {
+        $query = "SELECT COUNT(*) FROM product";
+        $result = mysql_query($query);
+
+        if ($result == false) {
+            return array("response" => "failed");
+        }
+
+        $productsNo = mysql_result($result, 0);
+        $productsNo = intval($productsNo);
+        return ceil($productsNo / $resultPerPage);
+    }
 
     public static function getAllProducts()
     {
