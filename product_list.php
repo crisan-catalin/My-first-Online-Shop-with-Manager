@@ -1,4 +1,6 @@
 <?php
+
+require_once 'header.php';
 require_once 'ProductDAO.php';
 const PRODUCTS_PER_PAGE = 2;
 
@@ -30,4 +32,6 @@ if ($pageResponse['response'] != "failed") {
     }
 }
 
+
+require_once 'footer.php';
 ?>
