@@ -30,7 +30,7 @@ if (isset($_SESSION['username'])) {
     echo "Bine ai venit " . $_SESSION['username'] . "! <br>";
 
     if (isset($_SESSION['admin'])) {
-        print('<a href="#">Panou control</a> <br>');
+        print('<a href="administrare.php">Panou control</a> <br>');
     }
 
     echo "<a href='index.php?logout'>Log out</a>";
