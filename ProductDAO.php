@@ -88,6 +88,31 @@ class ProductDAO
         return ceil($productsNo / $resultPerPage);
     }
 
+    public static function getProductsForCheckout($userId)
+    {
+        $query = "SELECT product_id,COUNT(product_id) FROM cart WHERE user_id=$userId GROUP BY product_id";
+        $result = mysql_query($query);
+
+        $productsInCart = array();
+        while ($row = mysql_fetch_array($result)) {
+            $response = self::getProduct($row[0]);
+            $buc = $row[1];
+
+            if ($response['response'] != "failed") {
+                array_shift($response);
+                $response["id"] = $row[0];
+                $response["buc"] = $buc;
+
+                $stock = self::getStockForProduct($row[0]);
+                if ($stock['response'] != "failed") {
+                    $response['stock'] = $stock['stock'];
+                }
+                array_push($productsInCart, $response);
+            }
+        }
+        return $productsInCart;
+    }
+
     public static function getAllProducts()
     {
         $query = "SELECT id, name, price, stock, image FROM product";
