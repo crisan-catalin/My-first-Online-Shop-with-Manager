@@ -36,7 +36,7 @@ if (isset($_SESSION['user_id'])) {
     foreach ($response as $item) {
         echo $item['name'];
         echo "<br>";
-        echo "Pret: " . $item['price'];
+        echo "Pret: " . $item['price'] . "RON";
         echo "<br>";
         echo "Imagine: " . $item['image'];
         echo "<br>";
@@ -62,12 +62,25 @@ if (isset($_SESSION['user_id'])) {
         echo "<input type='submit' name='remove' value='-' $disableRemove>";
         echo "<input type='submit' name='delete' value='Sterge produs'>";
         echo "</form>";
+
+        echo "TOTAL: " . intval($productsToCart) * intval($item['price']);
         echo "<br>Puteti cumpara maxim $maxProductsToBuy produse.";
 
         echo "<hr>";
     }
 
-    echo "<a href='checkout.php'>Checkout</a>";
+    echo "<form action='checkout.php' method='POST'>";
+    echo "Nume si Prenume: <input type='text' name='name' required='required'>";
+    echo "Telefon: <input type='tel' name='telephone' required='required'>";
+    echo "<br>";
+    echo "Judet: <input type='text' name='county' required='required'>";
+    echo "Oras: <input type='text' name='city' required='required'>";
+    echo "<br>";
+    echo "Adresa: <input type='text' name='address' required='required'>";
+    echo "<br>";
+    echo "<input type='submit' name='checkout' value='Trimite comanda'>";
+    echo "<br>";
+    echo "<form>";
 }
 
 require_once 'footer.php';
