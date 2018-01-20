@@ -5,18 +5,16 @@ class AccountDAO
 {
     private static function isValidAccount($isAdmin, $username, $password)
     {
-        $table = $isAdmin == true ? "admin" : "user";
-        $query = "SELECT * FROM $table WHERE username='$username' AND password='" . md5($password) . "'";
+        $isAdmin = intval($isAdmin);
+        $query = "SELECT * FROM user WHERE username='$username' AND password='" . md5($password) . "' AND admin=$isAdmin";
         $result = mysql_query($query);
 
         return mysql_num_rows($result) > 0;
     }
 
-    private static function existAccountWith($isAdmin, $username, $email)
+    private static function existAccountWith($username, $email)
     {
-        $table = $isAdmin === true ? "admin" : "user";
-
-        $query = "SELECT * FROM $table WHERE username='$username' OR email='$email'";
+        $query = "SELECT * FROM user WHERE username='$username' OR email='$email'";
         $result = mysql_query($query);
 
         return mysql_num_rows($result) > 0;
@@ -24,18 +22,23 @@ class AccountDAO
 
     public static function createAccount($isAdmin, $username, $password, $email)
     {
-        $table = $isAdmin === true ? "admin" : "user";
+        $isAdmin = intval($isAdmin);
 
-        if (self::existAccountWith($isAdmin, $username, $email)) {
+        if (self::existAccountWith($username, $email)) {
             return array("response" => "exist");
         }
 
-        $query = "INSERT INTO $table(username,password,email) VALUES('$username','" . md5($password) . "','$email')";
+        $query = "INSERT INTO user(username,password,email,admin) VALUES('$username','" . md5($password) . "','$email',$isAdmin)";
         $result = mysql_query($query);
 
-        if ($result) {
+        if ($result == true) {
             $accountId = mysql_insert_id();
             $_SESSION["user_id"] = $accountId;
+            $_SESSION['username'] = $username;
+
+            if ($isAdmin == 1) {
+                $_SESSION['admin'] = true;
+            }
 
             return array("response" => "success");
         }
@@ -62,14 +65,12 @@ class AccountDAO
         return array("response" => "failed");
     }
 
-    public static function getAccountWithId($isAdmin, $id)
+    public static function getAccountWithId($id)
     {
-        $table = $isAdmin === true ? "admin" : "user";
-
-        $query = "SELECT username, email FROM $table WHERE id=" . $id;
+        $query = "SELECT username, email FROM user WHERE id=" . $id;
         $result = mysql_query($query);
 
-        if ($result == false) {
+        if ($result == false || mysql_num_rows($result) == 0) {
             return array("response" => "failed");
         }
 
@@ -80,41 +81,36 @@ class AccountDAO
             "email" => $row[1]);
     }
 
-    public static function updateAccountEmail($isAdmin, $id, $email)
+    public static function updateAccountEmail($id, $newEmail)
     {
-        $table = $isAdmin === true ? "admin" : "user";
-
-        $query = "SELECT id FROM $table WHERE id=" . $id;
-        $result = mysql_query($query);
-
-        if (mysql_num_rows($result) != 1) {
-            return array("response" => "failed");
+        $response = self::getAccountWithId($id);
+        if ($response['response'] == "failed") {
+            return $response;
         }
 
-        $query = "UPDATE $table SET email='" . $email . "' WHERE id=" . $id;
+        $query = "UPDATE user SET email='" . $newEmail . "' WHERE id=" . $id;
         return mysql_query($query) == true ? array("response" => "success") : array("response" => "failed");
     }
 
-    public static function updateAccountPassword($isAdmin, $id, $password)
+    public static function updateAccountPassword($id, $password)
     {
-        $table = $isAdmin === true ? "admin" : "user";
-
-        $query = "SELECT id FROM $table WHERE id=" . $id;
-        $result = mysql_query($query);
-
-        if (mysql_num_rows($result) != 1) {
-            return array("response" => "failed");
+        $response = self::getAccountWithId($id);
+        if ($response['response'] == "failed") {
+            return $response;
         }
 
-        $query = "UPDATE $table SET password='" . md5($password) . "' WHERE id=" . $id;
+        $query = "UPDATE user SET password='" . md5($password) . "' WHERE id=" . $id;
         return mysql_query($query) == true ? array("response" => "success") : array("response" => "failed");
     }
 
-    public static function deleteAccountWithId($isAdmin, $id)
+    public static function deleteAccountWithId($id)
     {
-        $table = $isAdmin === true ? "admin" : "user";
+        $response = self::getAccountWithId($id);
+        if ($response['response'] == "failed") {
+            return $response;
+        }
 
-        $query = "DELETE FROM $table WHERE id=" . $id;
+        $query = "DELETE FROM user WHERE id=" . $id;
         return mysql_query($query) == true ? array("response" => "success") : array("response" => "failed");
     }
 }
