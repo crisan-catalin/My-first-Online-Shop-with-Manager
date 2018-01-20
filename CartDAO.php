@@ -4,9 +4,9 @@ require_once 'ProductDAO.php';
 
 class CartDAO
 {
-    public static function addToCart($userId, $productId)
+    public static function addToCart($userId, $productId, $buc)
     {
-        $response = ProductDAO::removeFromStock($productId, 1);
+        $response = ProductDAO::removeFromStock($productId, $buc);
         if ($response["response"] !== "success") {
             return $response;
         }
@@ -17,17 +17,24 @@ class CartDAO
         return $result == false ? array("response" => "failed") : array("response" => "success");
     }
 
-    public static function removeFromCart($userId, $productId)
+    // Set $buc = 0 to delete all pieces from cart
+    public static function removeFromCart($userId, $productId, $buc)
     {
-        $response = ProductDAO::addToStock($productId, 1);
+        $limit = intval($buc) > 0 ? "LIMIT $buc" : "";
+        $query = "DELETE FROM cart WHERE user_id=$userId AND product_id=$productId $limit";
+        $result = mysql_query($query);
+
+        if ($result == false) {
+            return array("response" => "failed");
+        }
+
+        $addToStock = mysql_affected_rows();
+        $response = ProductDAO::addToStock($productId, $addToStock);
         if ($response["response"] !== "success") {
             return $response;
         }
 
-        $query = "DELETE FROM cart WHERE user_id=$userId AND product_id=$productId";
-        $result = mysql_query($query);
-
-        return $result == false ? array("response" => "failed") : array("response" => "success");
+        return array("response" => "success");
     }
 
     public static function checkout($userId)
@@ -57,7 +64,7 @@ class CartDAO
                 return array("response" => "failed");
             }
 
-            self::removeFromCart($userId, $productId);
+            self::removeFromCart($userId, $productId, 1);
         }
         print "[INFO] showCheckout method don't work.";
     }
