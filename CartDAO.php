@@ -37,6 +37,16 @@ class CartDAO
         return array("response" => "success");
     }
 
+    public static function removeForCheckout($userId, $productId, $buc)
+    {
+        $query = "DELETE FROM cart WHERE user_id=$userId AND product_id=$productId LIMIT $buc";
+        $result = mysql_query($query);
+
+        if ($result == false) {
+            return array("response" => "failed");
+        }
+    }
+
     public static function checkout($userId)
     {
         $queryHistory = "INSERT INTO history(user_id, checkout) VALUES($userId,now())";
