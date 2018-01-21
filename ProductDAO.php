@@ -33,7 +33,7 @@ class ProductDAO
 
     public static function getProduct($id)
     {
-        if (!self::productExistWithId($id)) {
+        if (self::productExistWithId($id) == false) {
             return array("response" => "failed");
         }
 
@@ -170,6 +170,14 @@ class ProductDAO
         return $result === true ? array("response" => "success") : array("response" => "failed");
     }
 
+    public static function addProduct($productName, $price, $stock, $imagePath)
+    {
+        $query = "INSERT INTO product(name, price, stock, image) VALUES('$productName',$price,$stock,'$imagePath')";
+        $result = mysql_query($query);
+
+        return $result === true ? array("response" => "success") : array("response" => "failed");
+    }
+
     public static function deleteProduct($id)
     {
         if (!self::productExistWithId($id)) {
@@ -225,5 +233,17 @@ class ProductDAO
         $result = mysql_query($query);
 
         return $result == false ? array("response" => "failed") : array("response" => "success");
+    }
+
+    public static function removeProduct($productId)
+    {
+        if (self::productExistWithId($productId) == false) {
+            return array("response" => "failed");
+        }
+
+        $query = "DELETE FROM product WHERE id=$productId";
+        $result = mysql_query($query);
+
+        return $result == true ? array("response" => "success") : array("response" => "failed");
     }
 }
