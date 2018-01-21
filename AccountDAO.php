@@ -131,4 +131,39 @@ class AccountDAO
         $query = "DELETE FROM user WHERE id=" . $id;
         return mysql_query($query) == true ? array("response" => "success") : array("response" => "failed");
     }
+
+    public static function getPageNumbersUsing($resultPerPage)
+    {
+        $query = "SELECT COUNT(*) FROM user";
+        $result = mysql_query($query);
+
+        if ($result == false) {
+            return array("response" => "failed");
+        }
+
+        $userNo = mysql_result($result, 0);
+        $userNo = intval($userNo);
+        return ceil($userNo / $resultPerPage);
+    }
+
+    public static function getUsers($resultsPerPage, $pageNo)
+    {
+        $offset = (intval($pageNo) - 1) * $resultsPerPage;
+        $query = "SELECT id, username, email, admin FROM user LIMIT $resultsPerPage OFFSET $offset";
+        $result = mysql_query($query);
+
+        if ($result == false) {
+            return array("response" => "failed");
+        }
+
+        $userArray = array("response" => "success");
+        while ($row = mysql_fetch_array($result)) {
+            array_push($userArray, array("id" => $row[0],
+                "username" => $row[1],
+                "email" => $row[2],
+                "admin" => $row[3]));
+        }
+
+        return $userArray;
+    }
 }
