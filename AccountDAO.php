@@ -82,26 +82,43 @@ class AccountDAO
             "admin" => $row[2]);
     }
 
-    public static function updateAccountEmail($id, $newEmail)
+    public static function updateAccount($id, $newUsername, $newEmail, $newPassword, $isAdmin)
     {
         $response = self::getAccountWithId($id);
         if ($response['response'] == "failed") {
             return $response;
         }
 
-        $query = "UPDATE user SET email='" . $newEmail . "' WHERE id=" . $id;
-        return mysql_query($query) == true ? array("response" => "success") : array("response" => "failed");
-    }
+        $paramsArray = array();
 
-    public static function updateAccountPassword($id, $password)
-    {
-        $response = self::getAccountWithId($id);
-        if ($response['response'] == "failed") {
-            return $response;
+        if (strlen($newUsername) > 0) {
+            array_push($paramsArray, "username='$newUsername'");
+        }
+        if (strlen($newEmail) > 0) {
+            array_push($paramsArray, "email='$newEmail'");
+        }
+        if (strlen($newPassword) > 0) {
+            array_push($paramsArray, "password='" . md5($newPassword) . "'");
+        }
+        if ($isAdmin == true) {
+            array_push($paramsArray, "admin=1");
+        } else {
+            array_push($paramsArray, "admin=0");
         }
 
-        $query = "UPDATE user SET password='" . md5($password) . "' WHERE id=" . $id;
-        return mysql_query($query) == true ? array("response" => "success") : array("response" => "failed");
+        $queryParams = "";
+
+        for ($i = 0; $i < count($paramsArray); $i++) {
+            $queryParams .= $paramsArray[$i];
+            if ($i < count($paramsArray) - 1) {
+                $queryParams .= ",";
+            }
+        }
+
+        $query = "UPDATE user SET $queryParams WHERE id=$id";
+        $result = mysql_query($query);
+
+        return $result === true ? array("response" => "success") : array("response" => "failed");
     }
 
     public static function deleteAccountWithId($id)
