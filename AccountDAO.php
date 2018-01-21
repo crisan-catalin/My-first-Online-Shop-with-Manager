@@ -67,7 +67,7 @@ class AccountDAO
 
     public static function getAccountWithId($id)
     {
-        $query = "SELECT username, email FROM user WHERE id=" . $id;
+        $query = "SELECT username, email, admin FROM user WHERE id=" . $id;
         $result = mysql_query($query);
 
         if ($result == false || mysql_num_rows($result) == 0) {
@@ -78,7 +78,8 @@ class AccountDAO
 
         return array("response" => "success",
             "username" => $row[0],
-            "email" => $row[1]);
+            "email" => $row[1],
+            "admin" => $row[2]);
     }
 
     public static function updateAccountEmail($id, $newEmail)
