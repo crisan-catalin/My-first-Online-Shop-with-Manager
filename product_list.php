@@ -23,7 +23,6 @@ if ($pageResponse['response'] != "failed") {
         echo "No product available";
     }
 
-
     echo "<hr>";
     for ($i = 0; $i < $pageResponse; $i++) {
         $pageNumber = $i + 1;
