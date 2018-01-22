@@ -35,32 +35,46 @@ if (isset($_GET['page'])) {
 
 <!-- container -->
 <div class="container">
+
+    <!--        Navigation bar-->
     <div class="row">
-
         <div class="col-md-12">
-            <div class="page-header">
-                <h1><a href='index.php'>My Shop</a></h1>
-            </div>
+            <nav class="navbar navbar-inverse">
+                <h1><a class="navbar-brand" href="index.php">My SHOP</a></h1>
+                <?php
+
+                echo '<ul class="nav">';
+
+                if (isset($_SESSION['admin'])) {
+                    echo '<li class="nav-item">';
+                    echo '<a class="nav-link active" href="administration.php">Panou control</a>';
+                    echo '</li>';
+                }
+                echo '<li class="nav-item">';
+                echo '<a class="nav-link" href="cart.php">Vezi cos</a>';
+                echo '</li>';
+
+                if (isset($_SESSION['username'])) {
+                    echo '<li class="nav-item">';
+                    echo '<a class="nav-link btn btn-danger" href="index.php?logout">Deconectare</a>';
+                    echo '</li>';
+                }
+
+                echo "</ul>";
+                ?>
+            </nav>
+            <hr>
         </div>
+    </div>
 
-        <?php
-
-
-        if (isset($_SESSION['username'])) {
-            echo "Bine ai venit " . $_SESSION['username'] . "! <br>";
-
-            if (isset($_SESSION['admin'])) {
-                print('<a href="administration.php">Panou control</a> <br>');
+    <div class="row">
+        <div class="col-sm-12">
+            <?php
+            if (isset($_SESSION['username'])) {
+                echo "<p class='text-center'>Bine ai venit " . $_SESSION['username'] . "! </p>";
+            } else {
+                echo "<p class='text-center'>Apasa <a href='login.php'>login</a> daca ai deja un cont sau <a href='signup.php'>creaza cont</a> nou.</p>";
             }
-
-            echo "<a href='index.php?logout'>Log out</a>";
-        } else {
-            echo "Apasa <a href='login.php'>login</a> daca ai deja un cont sau <a href='signup.php'>creaza cont</a> nou.";
-        }
-
-        echo "<br>";
-        echo "<a href='cart.php'>Vezi cos</a>";
-
-
-        echo "<hr>";
-        ?>
+            ?>
+        </div>
+    </div>

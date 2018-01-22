@@ -12,8 +12,8 @@ if (isset($_POST['delete_yes'])) {
     $response = AccountDAO::deleteAccountWithId($_GET['user_id']);
     if ($response['response'] != "failed") {
         echo "<a href='administration.php'>Inapoi</a>";
-        echo "<br>";
-        echo "Utilizatorul a fost sters cu success.";
+        echo "<div class='alert alert-success text-center' role='alert'>Utilizatorul a fost sters cu success</div>";
+
 
         require_once 'footer.php';
         return;
@@ -36,9 +36,7 @@ if (isset($_POST['add_user'])) {
     echo "<br>";
     echo "<input type='submit' value='Adauga' name ='add_user'>";
     echo "</form>";
-}
-
-if (isset($_GET['user_id'])) {
+} elseif (isset($_GET['user_id'])) {
     $userId = $_GET['user_id'];
 
     if (isset($_POST['edit_user'])) {
@@ -57,20 +55,25 @@ if (isset($_GET['user_id'])) {
 
             echo "<h2>Modifica utilizator</h2>";
             echo "<a href='administration.php'>Inapoi</a>";
-            echo "<table>";
-            echo "<tr><th>Username</th><th>Email</th><th>Admin</th></tr>";
+            echo "<table class='table table-bordered'>";
+            echo "<thead class='thead-light'><tr><th>Username</th><th>Email</th><th>Admin</th></tr></thead>";
             echo "<tr><td>$username</td><td>$email</td><td>$isAdmin</td></tr>";
             echo "</table>";
 
             echo "<form action='user_edit.php' method='POST'>";
             echo "<input type='hidden' name='user_id' value='$userId'>";
-            echo "Username: <input type='text' name='username' placeholder='(Optional)'>";
-            echo "<br>";
-            echo "Email: <input type='email' name='email' placeholder='(Optional)'>";
-            echo "<br>";
+            echo "<div class='form-group'>";
+            echo "Username: <input type='text' class='form-control' name='username' placeholder='(Optional)'>";
+            echo "</div>";
+            echo "<div class='form-group'>";
+            echo "Email: <input type='email' class='form-control' name='email' placeholder='(Optional)'>";
+            echo "</div>";
+            echo "<div class='form-group'>";
             echo "Drept admin: <input type='checkbox' name='admin' $checked>";
-            echo "<br>";
+            echo "</div>";
+            echo "<div class='form-group'>";
             echo "<input type='submit' value='Modifica utilizator' name ='edit_user'>";
+            echo "</div>";
             echo "<form>";
         }
 
@@ -82,7 +85,7 @@ if (isset($_GET['user_id'])) {
         echo "</form>";
     }
 } else {
-    echo "<h2> No user found</h2>";
+    echo "<h2>Nu a fost gasit niciun utilizator.</h2>";
 }
 
 require_once 'footer.php';

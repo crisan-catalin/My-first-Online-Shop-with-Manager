@@ -10,13 +10,13 @@ if (isset($_POST['user_name']) && isset($_POST['password'])) {
         header("Location: http://localhost/proiect/index.php");
         exit();
     } else {
-        echo 'Nume sau parola invalida <br>';
-        echo '<a href="login.php">Incearca dinnou</a>';
-        exit;
+        require_once 'header.php';
+        echo "<div class='alert alert-warning text-center' role='alert'>Nume sau parola invalida</div>";
+        require_once 'footer.php';
     }
 } else {
-    echo 'Nume sau parola invalida <br>';
-    echo '<a href="login.php">Incearca dinnou</a>';
-    exit;
+    require_once 'header.php';
+    echo "<div class='alert alert-warning text-center' role='alert'>Nume sau parola invalida</div>";
+    require_once 'footer.php';
 }
 ?>

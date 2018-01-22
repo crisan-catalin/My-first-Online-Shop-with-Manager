@@ -24,7 +24,7 @@ if (isset($_SESSION['user_id'])) {
     $userId = $_SESSION['user_id'];
 
     if (CartDAO::showCheckout($_SESSION['user_id']) == false) {
-        echo "Cosul este gol :(";
+        echo "<div class='alert alert-warning text-center' role='alert'>Cosul este gol :(</div>";
 
         require_once 'footer.php';
         return;
@@ -70,16 +70,24 @@ if (isset($_SESSION['user_id'])) {
     }
 
     echo "<form action='checkout.php' method='POST'>";
-    echo "Nume si Prenume: <input type='text' name='name' required='required'>";
-    echo "Telefon: <input type='tel' name='telephone' required='required'>";
-    echo "<br>";
-    echo "Judet: <input type='text' name='county' required='required'>";
-    echo "Oras: <input type='text' name='city' required='required'>";
-    echo "<br>";
-    echo "Adresa: <input type='text' name='address' required='required'>";
-    echo "<br>";
-    echo "<input type='submit' name='checkout' value='Trimite comanda'>";
-    echo "<br>";
+    echo "<div class='form-group'>";
+    echo "<label for='name'>Nume si Prenume: </label><input type='text' class='form-control' id='name' name='name' required='required'>";
+    echo "</div>";
+    echo "<div class='form-group'>";
+    echo "Telefon: <input type='tel' class='form-control' name='telephone' required='required'>";
+    echo "</div>";
+    echo "<div class='form-group'>";
+    echo "Judet: <input type='text' class='form-control' name='county' required='required'>";
+    echo "</div>";
+    echo "<div class='form-group'>";
+    echo "Oras: <input type='text' class='form-control' name='city' required='required'>";
+    echo "</div>";
+    echo "<div class='form-group'>";
+    echo "Adresa: <input type='text' class='form-control' name='address' required='required'>";
+    echo "</div>";
+    echo "<div class='form-group'>";
+    echo "<input type='submit' class='form-control' name='checkout' value='Trimite comanda'>";
+    echo "</div>";
     echo "<form>";
 }
 

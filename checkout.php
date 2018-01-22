@@ -12,7 +12,7 @@ if (isset($_POST['checkout']) && isset($_SESSION['user_id'])) {
 
     CheckoutDAO::checkout($id, $name, $telephone, $county, $city, $address);
 
-    echo "Comanda finalizata cu success!";
+    echo "<div class='alert alert-success text-center' role='alert'>Comanda finalizata cu success</div>";
 }
 
 require_once 'footer.php';

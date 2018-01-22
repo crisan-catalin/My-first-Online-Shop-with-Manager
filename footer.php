@@ -1,12 +1,12 @@
 </div>
-<!-- /row -->
-
-</div>
 <!-- /container -->
-
-<footer>
-    <p>© 2018<a href="#"> My SHOP</a>. All rights reserved.</p>
-</footer>
+<div class="container-fluid mt-4">
+    <footer class="row">
+        <div class="col-sm-12 text-center">
+            <p>© 2018<a href="#"> My SHOP</a>. All rights reserved.</p>
+        </div>
+    </footer>
+</div>
 
 <!-- bootstrap JavaScript -->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
