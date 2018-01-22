@@ -46,10 +46,18 @@ class AccountDAO
         return array("response" => "failed");
     }
 
+    private static function getIdForAccount($username, $password)
+    {
+        $query = "SELECT id FROM user WHERE username='$username' AND password='" . md5($password) . "'";
+        $result = mysql_query($query);
+
+        return mysql_result($result, 0);
+    }
+
     public static function loginAccount($username, $password)
     {
         if (self::isValidAccount(true, $username, $password)) {
-            $_SESSION['user_id'] = mysql_insert_id();
+            $_SESSION['user_id'] = self::getIdForAccount($username, $password);
             $_SESSION['admin'] = true;
             $_SESSION['username'] = $username;
 
